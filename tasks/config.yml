@@ -1,0 +1,8 @@
+---
+- name: Generate the Keycloak config
+  notify: Restart Keycloak
+  ansible.builtin.template:
+    src: keycloak/keycloak.conf.j2
+    dest: "{{ keycloak.prefix.config }}/conf/keycloak.conf"
+    owner: root
+    mode: "0644"

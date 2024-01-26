@@ -1,0 +1,17 @@
+---
+keycloak:
+  domain:
+  config:
+    db: "postgres"
+    db_url_host: "localhost"
+    db_username:
+    db_password:
+    db_url_database:
+    hostname_url: "https://{{ vars.keycloak.domain }}"
+    http_enabled: true
+    hostname_strict_https: false
+    hostname_strict: false
+    proxy: edge
+    http_port: 8080
+  prefix:
+    config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"

@@ -1,0 +1,13 @@
+---
+- name: Manage the Keycloak config
+  ansible.builtin.include_tasks: config.yml
+
+- name: Configure Nginx for Keycloak
+  ansible.builtin.include_tasks: nginx.yml
+
+- name: Start and enable Keycloak
+  register: keycloak_service_started
+  ansible.builtin.service:
+    name: keycloak
+    state: started
+    enabled: yes

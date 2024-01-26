@@ -1,0 +1,8 @@
+---
+- name: Generate the Keycloak Nginx config
+  notify: Restart nginx
+  ansible.builtin.template:
+    src: nginx/http.d/keycloak.conf.j2
+    dest: "{{ nginx.prefix.config }}/http.d/keycloak.conf"
+    owner: root
+    mode: "0644"

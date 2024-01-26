@@ -1,0 +1,3 @@
+{% for key, value in keycloak.config.items() | rejectattr('1', 'eq', none) | sort -%}
+{{ key | replace("_", "-") }}={{ value }}
+{% endfor %}
