@@ -10,9 +10,11 @@ A Keycloak role for FreeBSD Proservers. For the Docker-based Linux role, see [an
 * [ansible-proserver-dehydrated](https://github.com/punktDe/ansible-proserver-dehydrated)
 * [ansible-proserver-nginx](https://github.com/punktDe/ansible-proserver-nginx)
 
-One of the following:
+... as well as one of the following:
 * [ansible-proserver-mariadb](https://github.com/punktDe/ansible-proserver-mariadb)
 * [ansible-proserver-postgresql](https://github.com/punktDe/ansible-proserver-postgresql)
+
+The database type can be selected using the `keycloak.config.db` variable. The options are `postgres` and `mariadb`
 
 ## Installation
 See [ROLE_USAGE.md](https://github.com/punktDe/ansible-proserver-documentation/blob/main/ROLE_USAGE.md)
