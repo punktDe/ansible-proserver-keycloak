@@ -26,8 +26,6 @@ server {
   port_in_redirect off;
   {% endif %}
 
-  include {{ nginx.prefix.config }}/include/security_headers.conf;
-
   {% if nginx.modsecurity is defined and nginx.modsecurity.enabled %}
   include {{ nginx.prefix.config }}/include/modsecurity.conf;
   {% endif %}
