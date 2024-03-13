@@ -1,10 +1,14 @@
 ---
 dependencies:
+  - role: system
+    when: (lookup('env','GITHUB_ACTIONS') | length) != 0
   - role: nginx
   - role: postgresql
     when: keycloak.config.db == "postgres"
   - role: mariadb
     when: keycloak.config.db == "mariadb"
+  - role: docker
+    when: ansible_system == "Linux"
 
 galaxy_info:
   author: "Punkt.de"

@@ -1,0 +1,17 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check that Keycloak is up
+      ansible.builtin.uri:
+        url: http://localhost:8080
+        return_content: true
+      register: this
+      retries: 5
+      delay: 5
+      until: not this.failed
+
+    - name: Debug
+      ansible.builtin.debug:
+        var: this

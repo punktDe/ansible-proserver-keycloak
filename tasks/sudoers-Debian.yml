@@ -1,0 +1,12 @@
+---
+- name: Allow the user proserver to control the keycloak service
+  ansible.builtin.copy:
+    content: |
+        proserver ALL = NOPASSWD: /bin/systemctl start keycloak
+        proserver ALL = NOPASSWD: /bin/systemctl status keycloak
+        proserver ALL = NOPASSWD: /bin/systemctl stop keycloak
+        proserver ALL = NOPASSWD: /bin/systemctl restart keycloak
+    dest: "{{ keycloak.prefix.sudoers }}/proserver-restart-keycloak"
+    validate: 'bash -c "cat /etc/sudoers %s | visudo -cf-"'
+    owner: root
+    mode: "0644"

@@ -1,8 +1,8 @@
 # ansible-proserver-keycloak
-A Keycloak role for FreeBSD Proservers. For the Docker-based Linux role, see [ansible-keycloak](https://github.com/punktDe/ansible-keycloak).
+A Keycloak role for FreeBSD Proservers.
 
 ## Requirements
-- A FreeBSD-based Proserver
+- A FreeBSD-based Proserver or a recent Ubuntu/Debian installation
 - Ansible >= 8.2.0
 - Ansible option `hash_behaviour` set to `merge`
 
@@ -16,9 +16,10 @@ A Keycloak role for FreeBSD Proservers. For the Docker-based Linux role, see [an
 
 The database type can be selected using the `keycloak.config.db` variable. The options are `postgres` and `mariadb`
 
+On Linux, you will additionally need [ansible-docker](https://github.com/punktDe/ansible-docker)
+
 ## Installation
 See [ROLE_USAGE.md](https://github.com/punktDe/ansible-proserver-documentation/blob/main/ROLE_USAGE.md)
-
 
 ## Parameters
 
@@ -72,12 +73,30 @@ proxy=edge
 http-port=8080
 ```
 
+On Linux, you additionally have access to the Docker-related variables:
+```yaml
+keycloak:
+  container_name: keycloak
+  image: quay.io/keycloak/keycloak:22.0
+  network: host
+  entrypoint: /mnt/entrypoint.sh
+  container_start_stop_timeout: 55
+  environment:
+    KEYCLOAK_FRONTEND_URL: "https://{{ vars.keycloak.domain }}/auth"
+    KEYCLOAK_ADMIN:
+    KEYCLOAK_ADMIN_PASSWORD:
+    PROXY_ADDRESS_FORWARDING: "true"
+    KEYCLOAK_BASE_URL: "https://{{ vars.keycloak.domain }}"
+```
+
 ### prefix
 * **prefix.config** – Path to Keycloak configuration folder. Used for themes, providers, configuration,etc. Defaults to `/usr/local/java/keycloak` on FreeBSD and `/var/opt/keycloak` on Linux
+* **prefix.sudoers** – Path to the sudoers file
 
 ```yaml
 keycloak:
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
+    sudoers: "{{ '/usr/local/etc/sudoers.d/' if ansible_system == 'FreeBSD' else '/etc/sudoers.d' }}"
 ```
 

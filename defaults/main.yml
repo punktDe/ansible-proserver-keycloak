@@ -3,16 +3,37 @@ keycloak:
   redirect_admin: false
   domain:
   config:
+    # Refer to https://www.keycloak.org/server/all-config for available options
+    # Replace - with _ in the option names
+    # Options with empty values will be ignored
+    cache:
+    cache_stack:
     db: "postgres"
     db_url_host: "localhost"
     db_username:
     db_password:
     db_url_database:
     hostname_url: "https://{{ vars.keycloak.domain }}"
+    hostname_admin_url: "https://{{ vars.keycloak.domain }}/"
     http_enabled: true
     hostname_strict_https: false
     hostname_strict: false
     proxy: edge
     http_port: 8080
+    features:
+    features-disabled:
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
+    sudoers: "{{ '/usr/local/etc/sudoers.d/' if ansible_system == 'FreeBSD' else '/etc/sudoers.d' }}"
+  # For Docker-based installations on Debian
+  container_name: keycloak
+  image: quay.io/keycloak/keycloak:22.0
+  network: host
+  entrypoint: /mnt/entrypoint.sh
+  container_start_stop_timeout: 55
+  environment:
+    KEYCLOAK_FRONTEND_URL: "https://{{ vars.keycloak.domain }}/auth"
+    KEYCLOAK_ADMIN:
+    KEYCLOAK_ADMIN_PASSWORD:
+    PROXY_ADDRESS_FORWARDING: "true"
+    KEYCLOAK_BASE_URL: "https://{{ vars.keycloak.domain }}"
