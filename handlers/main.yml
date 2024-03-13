@@ -1,6 +1,0 @@
----
-- name: Restart Keycloak
-  when: not keycloak_service_started.changed
-  ansible.builtin.service:
-    name: keycloak
-    state: restarted

@@ -1,6 +1,18 @@
 ---
-- name: Manage the Keycloak config
+- name: Install Keycloak (Debian)
+  when: ansible_os_family == "Debian"
+  ansible.builtin.include_tasks: install-Debian.yml
+
+- name: Install the Keycloak config
   ansible.builtin.include_tasks: config.yml
+
+- name: Configure sudoers for Keycloak (Debian)
+  when: ansible_os_family == "Debian"
+  ansible.builtin.include_tasks: sudoers-Debian.yml
+
+- name: Configure sudoers for Keycloak (FreeBSD)
+  when: ansible_system == "FreeBSD"
+  ansible.builtin.include_tasks: sudoers-FreeBSD.yml
 
 - name: Configure Nginx for Keycloak
   ansible.builtin.include_tasks: nginx.yml

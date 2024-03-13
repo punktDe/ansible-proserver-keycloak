@@ -1,0 +1,53 @@
+---
+- name: Create web directories for Keycloak
+  loop:
+    - "{{ keycloak.prefix.config }}"
+    - "{{ keycloak.prefix.config }}/conf"
+    - "{{ keycloak.prefix.config }}/themes"
+    - "{{ keycloak.prefix.config }}/providers"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: proserver
+    group: proserver
+    mode: "0755"
+    state: directory
+
+- name: Create export directory for Keycloak
+  loop:
+    - "{{ keycloak.prefix.opt }}/export"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: 1000
+    mode: "0775"
+    group: staff
+    state: directory
+
+- name: Template extra files for Keycloak
+  register: extra_files
+  loop:
+    - src: keycloak/entrypoint.sh
+      dest: "{{ keycloak.prefix.opt }}/entrypoint.sh"
+  loop_control:
+    label: "{{ item.dest }}"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0755"
+
+- name: Install systemd service for Keycloak
+  ansible.builtin.template:
+    src: systemd/keycloak.service
+    dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Keycloak
+  loop:
+    - /etc/systemd/system/keycloak.service
+
+- name: Enable Keycloak
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: keycloak
+    enabled: true
+  notify: Restart Keycloak
