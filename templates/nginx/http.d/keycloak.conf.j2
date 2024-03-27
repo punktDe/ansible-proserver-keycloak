@@ -1,3 +1,34 @@
+#jinja2: lstrip_blocks: "True"
+
+{% macro add_header(header, value) %}
+  {% if value is iterable and value is not string %}
+      {% set endvalue = value | join(",") %}
+    {% elif value is boolean %}
+      {% set endvalue = value | lower %}
+    {% else %}
+      {% set endvalue = value %}
+    {% endif %}
+  add_header {{ header | replace("_", "-") }} {{ endvalue }};
+  {% endmacro %}
+
+{% macro custom_headers() %}
+  {% set origins = keycloak.custom_headers["Access_Control_Allow_Origin"] %}
+  {% if origins and origins is iterable and origins is not string %}
+if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
+      add_header "Access-Control-Allow-Origin" "$http_origin";
+    {% for header, value in keycloak.custom_headers.items() %}
+    {% if header.startswith("Access_Control") and header != "Access_Control_Allow_Origin" %}
+    {{ add_header(header, value) }}
+    {% endif %}
+    {% endfor %}
+    }
+  {% else %}
+   {% for header, value in keycloak.custom_headers.items() %}
+    {{ add_header(header, value) }}
+   {% endfor %}
+    {% endif %}
+{% endmacro %}
+
 {% if dehydrated | cert_exists(keycloak.domain) %}
 server {
   listen 0.0.0.0:80;
@@ -30,6 +61,8 @@ server {
   include {{ nginx.prefix.config }}/include/modsecurity.conf;
   {% endif %}
 
+  
+
   {% if keycloak.redirect_admin %}
     location = / {
         return 301 admin/master/console/;
@@ -49,7 +82,8 @@ server {
       proxy_buffers              4 256k;
       proxy_busy_buffers_size    256k;
       proxy_pass http://127.0.0.1:{{ keycloak.config.http_port }};
-  }
+      {{ custom_headers() }}
+    }
 
   ssl_certificate {{ dehydrated| cert_fullchain(keycloak.domain) }};
   ssl_certificate_key {{ dehydrated| cert_privkey(keycloak.domain) }};
