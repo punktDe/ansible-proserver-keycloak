@@ -37,6 +37,7 @@ server {
   {% set endvalue = value | lower %}
   {% else %}
   {% set endvalue = value %}
+  {% endif %}
   add_header {{ header | replace("_", "-") }} {{ endvalue }};
   {% endfor %}
 
