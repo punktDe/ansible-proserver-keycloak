@@ -30,8 +30,8 @@ server {
   include {{ nginx.prefix.config }}/include/modsecurity.conf;
   {% endif %}
 
-  {% for header, value in keycloak.custom_headers %}
-  add_header {{ header | replace("_", "-") }} {{ (value | join(",")) if value is iterable else value }};
+  {% for header, value in keycloak.custom_headers.items() %}
+  add_header {{ header | replace("_", "-") }} {{ (value | join(",")) if value is iterable and value is not string else value }};
   {% endfor %}
 
   {% if keycloak.redirect_admin %}
