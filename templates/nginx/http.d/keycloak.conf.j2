@@ -30,6 +30,10 @@ server {
   include {{ nginx.prefix.config }}/include/modsecurity.conf;
   {% endif %}
 
+  {% for header, value in keycloak.custom_headers %}
+  add_header {{ header | replace("_", "-") }} {{ (value | join(",")) if value is iterable else value }};
+  {% endfor %}
+
   {% if keycloak.redirect_admin %}
     location = / {
         return 301 admin/master/console/;
