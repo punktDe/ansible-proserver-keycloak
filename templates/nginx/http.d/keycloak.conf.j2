@@ -31,7 +31,13 @@ server {
   {% endif %}
 
   {% for header, value in keycloak.custom_headers.items() %}
-  add_header {{ header | replace("_", "-") }} {{ (value | join(",")) if value is iterable and value is not string else value }};
+  {% if value is iterable and value is not a string %}
+  {% set endvalue = value | join(",") %}
+  {% elif value is boolean %}
+  {% set endvalue = value | lower %}
+  {% else %}
+  {% set endvalue = value %}
+  add_header {{ header | replace("_", "-") }} {{ endvalue }};
   {% endfor %}
 
   {% if keycloak.redirect_admin %}
