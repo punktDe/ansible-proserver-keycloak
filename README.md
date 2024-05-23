@@ -36,7 +36,6 @@ keycloak:
 ```
 The domain name for the Keycloak frontend
 
-
 ### config
 
 An array of Keycloak configuration options. These options match the [official Keycloak options](https://www.keycloak.org/server/all-config), with the exception of dashes being replaced with underscores due to YAML limitations.
@@ -79,5 +78,33 @@ http-port=8080
 keycloak:
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
+```
+
+### custom_headers
+Defines additional headers that will be added to the Nginx configuration. Includes addtional logic in the Nginx template to allow for multiple `Access_Control_Allow_Origin` values. For example:
+```yaml
+keycloak:
+  custom_headers:
+    Access_Control_Allow_Origin:
+      - https://example.com
+      - https://anotherexample.com
+    Access_Control_Allow_Methods:
+      - GET
+      - POST
+      - OPTIONS
+    Access_Control_Allow_Credentials: true
+    Access_Control_Allow_Headers:
+      - Content-Type
+      - x-flow-csrftoken
+```
+
+This will result in the following Nginx configuration:
+```nginx
+if ( $http_origin ~* ((https://example.com|https://anotherexample.com)$) ) {
+  add_header "Access-Control-Allow-Origin" "$http_origin";
+  add_header Access-Control-Allow-Methods GET,POST,OPTIONS;
+  add_header Access-Control-Allow-Credentials true;
+  add_header Access-Control-Allow-Headers Content-Type,x-flow-csrftoken;
+}
 ```
 
