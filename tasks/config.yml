@@ -6,3 +6,20 @@
     dest: "{{ keycloak.prefix.config }}/conf/keycloak.conf"
     owner: root
     mode: "0644"
+
+- name: Make sure the rc.conf.d folder exists
+  when: ansible_system == "FreeBSD"
+  ansible.builtin.file:
+    dest: "/usr/local/etc/rc.conf.d"
+    owner: root
+    mode: "0755"
+
+- name: Force Keycloak to use www user
+  when: ansible_system == "FreeBSD"
+  ansible.builtin.lineinfile:
+    create: yes
+    state: present
+    dest: "/usr/local/etc/rc.conf.d/keycloak"
+    line: "keycloak_user=www"
+    mode: "0644"
+    owner: root
