@@ -12,6 +12,7 @@
   ansible.builtin.file:
     dest: "/usr/local/etc/rc.conf.d"
     owner: root
+    state: directory
     mode: "0755"
 
 - name: Force Keycloak to use www user
