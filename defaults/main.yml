@@ -3,7 +3,7 @@ keycloak:
   custom_headers: []
   redirect_admin: false
   redirect_custom:
-    enabled: true
+    enabled: false
     target:
   domain:
   config:
