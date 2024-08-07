@@ -2,6 +2,9 @@
 keycloak:
   custom_headers: []
   redirect_admin: false
+  redirect_custom:
+    enabled: true
+    target:
   domain:
   config:
     db: "postgres"
