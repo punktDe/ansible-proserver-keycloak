@@ -61,12 +61,15 @@ server {
   include {{ nginx.prefix.config }}/include/modsecurity.conf;
   {% endif %}
 
-  
-
   {% if keycloak.redirect_admin %}
     location = / {
         return 301 admin/master/console/;
     }
+  {% elif keycloak.redirect_custom and keycloak.redirect_custom.enabled %}
+    location = / {
+        return 301 {{ keycloak.redirect_custom.target }};
+    }
+  {% else %}
   {% endif %}
 
   location / {
