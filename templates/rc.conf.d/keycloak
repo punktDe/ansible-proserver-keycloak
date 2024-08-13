@@ -1,0 +1,4 @@
+keycloak_user=www
+{% if ansible_local.proserver.routing.with_gate64 -%}
+export JAVA_OPTS_APPEND="-Djava.net.preferIPv4Stack=false -Djava.net.preferIPv6Stack=true -Djava.net.preferIPv6Addresses=true"
+{% endif %}
