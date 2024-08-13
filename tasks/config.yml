@@ -15,12 +15,10 @@
     state: directory
     mode: "0755"
 
-- name: Force Keycloak to use www user
+- name: Template the Keycloak rc.conf.d file
   when: ansible_system == "FreeBSD"
-  ansible.builtin.lineinfile:
-    create: yes
-    state: present
+  ansible.builtin.template:
+    src: "rc.conf.d/keycloak"
     dest: "/usr/local/etc/rc.conf.d/keycloak"
-    line: "keycloak_user=www"
     mode: "0644"
     owner: root
