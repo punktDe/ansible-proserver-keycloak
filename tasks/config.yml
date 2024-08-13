@@ -16,6 +16,7 @@
     mode: "0755"
 
 - name: Template the Keycloak rc.conf.d file
+  notify: Restart Keycloak
   when: ansible_system == "FreeBSD"
   ansible.builtin.template:
     src: "rc.conf.d/keycloak"
