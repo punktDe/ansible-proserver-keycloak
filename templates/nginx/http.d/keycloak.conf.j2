@@ -84,7 +84,13 @@ server {
       proxy_buffer_size          128k;
       proxy_buffers              4 256k;
       proxy_busy_buffers_size    256k;
+
+      {% if ansible_local.proserver.routing.with_gate64 %}
+      proxy_pass http://[::0]:{{ keycloak.config.http_port }};
+      {% else %}
       proxy_pass http://127.0.0.1:{{ keycloak.config.http_port }};
+      {% endif %}
+
       {{ custom_headers() }}
     }
 
