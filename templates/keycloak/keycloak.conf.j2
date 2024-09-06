@@ -1,3 +1,7 @@
 {% for key, value in keycloak.config.items() | rejectattr('1', 'eq', none) | sort -%}
+{% if value is boolean %}
+{{ key | replace("_", "-") }}={{ value | lower }}
+{% else %}
 {{ key | replace("_", "-") }}={{ value }}
+{% endif %}
 {% endfor %}
