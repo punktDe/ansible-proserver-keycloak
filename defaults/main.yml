@@ -1,5 +1,6 @@
 ---
 keycloak:
+  user: www
   custom_headers: []
   redirect_admin: false
   redirect_custom:

@@ -12,6 +12,7 @@
   {% endmacro %}
 
 {% macro custom_headers() %}
+  {% if keycloak.custom_headers %}
   {% set origins = keycloak.custom_headers["Access_Control_Allow_Origin"] %}
   {% if origins and origins is iterable and origins is not string %}
 if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
@@ -26,6 +27,7 @@ if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
    {% for header, value in keycloak.custom_headers.items() %}
     {{ add_header(header, value) }}
    {% endfor %}
+    {% endif %}
     {% endif %}
 {% endmacro %}
 
