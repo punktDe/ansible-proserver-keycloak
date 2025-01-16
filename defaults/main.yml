@@ -18,6 +18,7 @@ keycloak:
     hostname_strict_https: false
     hostname_strict: false
     proxy: edge
+    proxy-headers: xforwarded
     http_port: 8080
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
