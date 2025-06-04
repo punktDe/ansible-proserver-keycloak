@@ -1,4 +1,4 @@
 keycloak_user={{ keycloak.user }}
-{% if ansible_local.proserver.routing.with_gate64 -%}
-export JAVA_OPTS_APPEND="-Djava.net.preferIPv4Stack=false -Djava.net.preferIPv6Stack=true -Djava.net.preferIPv6Addresses=true"
+{% if keycloak.java_opts_append | length > 0 %}
+export JAVA_OPTS_APPEND="{% for opt, val in keycloak.java_opts_append.items() %}-D{{ opt }}={{ (val | lower) if val is boolean else val }}{{ ' ' if loop.last else '' }}{% endfor %}"
 {% endif %}

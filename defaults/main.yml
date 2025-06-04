@@ -7,6 +7,10 @@ keycloak:
     enabled: false
     target:
   domain:
+  java_opts_append:
+    "java.net.preferIPv4Stack": "{{ false if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
+    "java.net.preferIPv6Stack": "{{ true if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
+    "java.net.preferIPv6Addresses": "{{ true if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
   config:
     db: "postgres"
     db_url_host: "localhost"
