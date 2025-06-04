@@ -13,12 +13,10 @@ keycloak:
     db_username:
     db_password:
     db_url_database:
-    hostname_url: "https://{{ vars.keycloak.domain }}"
+    hostname: "{{ vars.keycloak.domain }}"
     http_enabled: true
-    hostname_strict_https: false
-    hostname_strict: false
-    proxy: edge
-    proxy-headers: xforwarded
+    hostname_strict: true
+    proxy_headers: xforwarded
     http_port: 8080
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
