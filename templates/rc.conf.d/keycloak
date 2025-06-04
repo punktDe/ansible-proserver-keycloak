@@ -1,4 +1,4 @@
 keycloak_user={{ keycloak.user }}
 {% if keycloak.java_opts_append | length > 0 %}
-export JAVA_OPTS_APPEND="{% for opt, val in keycloak.java_opts_append.items() %}-D{{ opt }}={{ (val | lower) if val is boolean else val }}{{ ' ' if loop.last else '' }}{% endfor %}"
+export JAVA_OPTS_APPEND="{% for opt, val in keycloak.java_opts_append.items() %}{% if 'omit' not in val %}-D{{ opt }}={{ (val | lower) if val is boolean else val }}{{ ' ' if not loop.last }}{% endif %}{% endfor %}"
 {% endif %}
