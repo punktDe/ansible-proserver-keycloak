@@ -7,18 +7,20 @@ keycloak:
     enabled: false
     target:
   domain:
+  java_opts_append:
+    "java.net.preferIPv4Stack": "{{ false if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
+    "java.net.preferIPv6Stack": "{{ true if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
+    "java.net.preferIPv6Addresses": "{{ true if (ansible_local.proserver.routing.with_gate64 | default(False)) else omit }}"
   config:
     db: "postgres"
     db_url_host: "localhost"
     db_username:
     db_password:
     db_url_database:
-    hostname_url: "https://{{ vars.keycloak.domain }}"
+    hostname: "{{ vars.keycloak.domain }}"
     http_enabled: true
-    hostname_strict_https: false
-    hostname_strict: false
-    proxy: edge
-    proxy-headers: xforwarded
+    hostname_strict: true
+    proxy_headers: xforwarded
     http_port: 8080
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
