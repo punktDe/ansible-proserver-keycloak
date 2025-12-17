@@ -59,9 +59,9 @@ if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
       proxy_set_header    Host               $host;
       proxy_set_header    X-Real-IP          $remote_addr;
       {% if ansible_local.proserver.routing.with_gate64 %}
-      proxy_pass http://[::0]:{{ keycloak.config.health_port }};
+      proxy_pass http://[::0]:9000;
       {% else %}
-      proxy_pass http://127.0.0.1:{{ keycloak.config.health_port }};
+      proxy_pass http://127.0.0.1:9000;
       {% endif %}
     }
 {% endmacro %}
