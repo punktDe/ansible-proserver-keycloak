@@ -122,6 +122,7 @@ server {
     listen [::]:80;
     {% if ansible_local.proserver|default(none) and ansible_local.proserver.routing.with_gate64 -%}
     listen [::1]:87 proxy_protocol;
+    port_in_redirect off;
     {%- endif %}
 
     server_name {{ keycloak.domain }};
