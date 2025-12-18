@@ -22,5 +22,6 @@ keycloak:
     hostname_strict: true
     proxy_headers: xforwarded
     http_port: 8080
+    health_enabled: true
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
