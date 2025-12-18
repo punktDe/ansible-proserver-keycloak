@@ -32,7 +32,7 @@ if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
 {% endmacro %}
 
 
-{% macro reverse_proxy() %}
+{% macro reverse_proxy(https=true) %}
   location / {
       proxy_set_header    Host               $host;
       proxy_set_header    X-Real-IP          $remote_addr;
@@ -40,8 +40,10 @@ if ( $http_origin ~* (({{ origins | join("|")}})$) ) {
       proxy_set_header    X-Forwarded-For    $proxy_add_x_forwarded_for;
       proxy_set_header    X-Forwarded-Host   $host;
       proxy_set_header    X-Forwarded-Server $host;
+      {% if https %}
       proxy_set_header    X-Forwarded-Port   443;
       proxy_set_header    X-Forwarded-Proto  $scheme;
+      {% endif %}
       proxy_buffer_size          128k;
       proxy_buffers              4 256k;
       proxy_busy_buffers_size    256k;
@@ -122,14 +124,14 @@ server {
     listen [::]:80;
     {% if ansible_local.proserver|default(none) and ansible_local.proserver.routing.with_gate64 -%}
     listen [::1]:87 proxy_protocol;
-    port_in_redirect off;
     {%- endif %}
+    port_in_redirect off;
 
     server_name {{ keycloak.domain }};
 
     root /var/null;
 
-    {{ reverse_proxy() }}
+    {{ reverse_proxy(https=false) }}
 
 }
 {% endif %}
