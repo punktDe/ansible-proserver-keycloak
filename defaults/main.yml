@@ -25,3 +25,4 @@ keycloak:
     health_enabled: true
   prefix:
     config: "{{ '/usr/local/share/java/keycloak' if ansible_system == 'FreeBSD' else '/var/opt/keycloak' }}"
+  environment: {}
