@@ -4,6 +4,8 @@ export JAVA_OPTS_APPEND="{% for opt, val in keycloak.java_opts_append.items() %}
 {% endif %}
 {% if keycloak.environment | length > 0 %}
 {% for opt, val in keycloak.environment.items() %}
+{% if 'omit' not in val %}
 export {{ opt }}={{ (val | lower) if val is boolean else val }}
+{% endif %}
 {% endfor %}
 {% endif %}
