@@ -85,12 +85,12 @@ server {
 }
 
 server {
-  listen 0.0.0.0:443 ssl http2;
-  listen [::]:443 ssl http2;
+  listen 0.0.0.0:443 ssl{{ ' http2' if nginx.http2 | default(true) }};
+  listen [::]:443 ssl{{ ' http2' if nginx.http2 | default(true) }};
   server_name {{ keycloak.domain }};
 
   {% if ansible_local.proserver.routing.with_gate64 -%}
-  listen [::1]:57 ssl http2 proxy_protocol;
+  listen [::1]:57 ssl{{ ' http2' if nginx.http2 | default(true) }} proxy_protocol;
   port_in_redirect off;
   {% endif %}
 
